@@ -33,16 +33,18 @@ public class Salesman {
         double bound = 0.0;
 
         for (int i = 0; i < this.size; i++) {
-            bound += this.findNthShortestDistanceFrom(matrix, i, 1) + this.findNthShortestDistanceFrom(matrix, i, 2);
+            bound += (this.findNthShortestDistanceFrom(matrix, i, 1) + this.findNthShortestDistanceFrom(matrix, i, 2)) / 2;
         }
-
-        System.out.println(Arrays.deepToString(matrix));
 
         // Make the first city visited.
         this.visited[0] = true;
 
         // Recursively build the search space tree and modify the shortest path.
-        this.step(matrix, bound, 0, 1, path);
+        try {
+            this.searchNode(matrix, bound, 0, 1, path);
+        } catch (InterruptedException ignored) {
+            //
+        }
 
         return this.result;
     }
@@ -55,12 +57,16 @@ public class Salesman {
      * @param distance The current distance
      * @param level The current level
      * @param path The current path
+     * @throws InterruptedException After exceeding time limit.
      */
-    private void step(double[][] matrix, double bound, double distance, int level, int[] path) {
+    private void searchNode(double[][] matrix, double bound, double distance, int level, int[] path) throws InterruptedException {
+        if ((System.nanoTime() - Main.START_TIME) / 1000000 > Main.MAX_EXECUTION_MILIS) {
+            throw new InterruptedException();
+        }
+
         // If we reached the last level, consider updating the shortest path.
         if (level == this.size) {
             double distanceBack = matrix[path[level - 1]][path[0]];
-            System.out.println(String.format("%s to %s is %.3f", path[level - 1], path[0], distanceBack));
 
             // We can't return to self.
             if (distanceBack == 0.0) {
@@ -73,7 +79,6 @@ public class Salesman {
             if (candidate < this.result) {
                 this.result = candidate;
 
-                System.out.println(this.result);
                 System.out.println(Arrays.toString(path));
             }
 
@@ -88,8 +93,6 @@ public class Salesman {
                 continue;
             }
 
-            System.out.println(String.format("%s to %s is %.3f", path[level - 1], i, distanceToNext));
-
             // Store the bound for reset.
             double previousBound = bound;
 
@@ -101,8 +104,6 @@ public class Salesman {
                     ? (this.findNthShortestDistanceFrom(matrix, path[level - 1], 1) + this.findNthShortestDistanceFrom(matrix, i, 1)) / 2
                     : (this.findNthShortestDistanceFrom(matrix, path[level - 1], 2) + this.findNthShortestDistanceFrom(matrix, i, 1)) / 2;
 
-            System.out.println(String.format("Distance: [%.3f] Bound: [%.3f] Result: [%.3f]", distanceToNext, bound, this.result));
-
             // If the bound is shorter than our current result, continue searching the node.
             if (bound + distance < this.result) {
 
@@ -111,7 +112,7 @@ public class Salesman {
                 visited[i] = true;
 
                 // Recursively call the method for the current node.
-                this.step(matrix, bound, distance, level + 1, path);
+                this.searchNode(matrix, bound, distance, level + 1, path);
             }
 
             // Now we have to reset some of the variables before advancing to the next node.
@@ -165,8 +166,6 @@ public class Salesman {
         }
 
         paths.sort(Double::compare);
-
-        System.out.println(Arrays.toString(paths.toArray()));
 
         // The shortest path is index 1 as the list includes a distance to the same city.
         return paths.get(n);
