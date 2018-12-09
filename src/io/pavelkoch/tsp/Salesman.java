@@ -9,7 +9,7 @@ public class Salesman {
     private final List<City> cities;
     private final int size;
     private boolean[] visited;
-    private double result = Double.MAX_VALUE;
+    private double boundary = Double.MAX_VALUE;
 
     /**
      * Class constructor.
@@ -30,19 +30,19 @@ public class Salesman {
     public double travel() {
         double[][] matrix = this.generateAdjacencyMatrix();
         int[] path = new int[this.size + 1];
-        double cost = 0.0;
+        System.out.println(Arrays.deepToString(matrix));
+        double cost = this.reduceMatrix(matrix);
 
         System.out.println(Arrays.deepToString(matrix));
-        test(matrix);
-        System.out.println(Arrays.deepToString(matrix));
+        System.out.println(String.format("Cost: [%.3f]", cost));
 
         // Make the first city visited.
         this.visited[0] = true;
 
         // Recursively build the search space tree and modify the shortest path.
-        this.step(matrix, cost, 0, 1, path);
+        this.step(matrix, cost, 1, path);
 
-        return this.result;
+        return this.boundary;
     }
 
     /**
@@ -50,17 +50,49 @@ public class Salesman {
      *
      * @param matrix The adjacency matrix
      * @param cost The current bound
-     * @param distance The current distance
      * @param level The current level
      * @param path The current path
      */
-    private void step(double[][] matrix, double cost, double distance, int level, int[] path) {
+    private void step(double[][] matrix, double cost, int level, int[] path) {
         if (level == this.size) {
-            //
+            System.out.println(cost);
+
+            if (cost < this.boundary) {
+                this.boundary = cost;
+                System.out.println(Arrays.toString(path));
+            }
+
+            return;
         }
 
+        double previousCost = cost;
+
         for (int i = 0; i < this.size; i++) {
-            //
+            if (visited[i] || path[level - 1] == i) {
+                continue;
+            }
+
+            double[][] copy = this.copyMatrix(matrix);
+
+            double distance = copy[path[level - 1]][i];
+
+            this.modifyMatrix(copy, path[level - 1], i);
+
+            cost += distance + this.reduceMatrix(copy);
+
+            if (cost < this.boundary) {
+                path[level] = i;
+                visited[i] = true;
+
+                this.step(copy, cost, level + 1, path);
+            }
+
+            cost = previousCost;
+
+            visited = new boolean[this.size];
+            for (int j = 0; j < level; j++) {
+                visited[path[j]] = true;
+            }
         }
     }
 
@@ -89,7 +121,76 @@ public class Salesman {
         return matrix;
     }
 
-    private void test(double[][] matrix) {
-        matrix[0][0] = 123.0;
+    private double reduceMatrix(double[][] matrix) {
+        double cost = 0.0;
+
+        for (int i = 0; i < this.size; i++) {
+            double lowest = this.lowest(matrix, i, "row");
+
+            for (int j = 0; j < this.size; j++) {
+
+                // Skip -1 values.
+                if (matrix[i][j] == -1.0) {
+                    continue;
+                }
+
+                matrix[i][j] -= lowest;
+            }
+
+            cost += lowest;
+        }
+
+        for (int i = 0; i < this.size; i++) {
+            double lowest = this.lowest(matrix, i, "col");
+
+            for (int j = 0; j < this.size; j++) {
+
+                // Skip -1 values.
+                if (matrix[j][i] == -1.0) {
+                    continue;
+                }
+
+                matrix[j][i] -= lowest;
+            }
+
+            cost += lowest;
+        }
+
+        return cost;
+    }
+
+    private double lowest(double[][] matrix, int n, String orientation) {
+        double lowest = Double.MAX_VALUE;
+
+        for (int i = 0; i < this.size; i++) {
+            double value = orientation.equals("row") ? matrix[n][i] : matrix[i][n];
+
+            if (value == -1.0) {
+                continue;
+            }
+
+            lowest = value < lowest ? value : lowest;
+        }
+
+        return lowest == Double.MAX_VALUE ? 0.0 : lowest;
+    }
+
+    private void modifyMatrix(double[][] matrix, int from, int to) {
+        matrix[from][to] = matrix[to][from] = -1;
+
+        for (int i = 0; i < this.size; i++) {
+            matrix[from][i] = -1;
+            matrix[i][to] = -1;
+        }
+    }
+
+    private double[][] copyMatrix(double[][] matrix) {
+        double[][] copy = new double[this.size][this.size];
+
+        for (int i = 0; i < this.size; i++) {
+            copy[i] = Arrays.copyOf(matrix[i], this.size);
+        }
+
+        return copy;
     }
 }

@@ -8,7 +8,7 @@ public class Main {
 	/**
 	 * The input file name.
 	 */
-	private final static String INPUT_FILE = "train-1.txt";
+	private final static String INPUT_FILE = "train-2.txt";
 
 	/**
 	 * The application entry point.
