@@ -1,6 +1,5 @@
 package io.pavelkoch.tsp;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,17 +29,17 @@ public class Salesman {
     public double travel() {
         double[][] matrix = this.generateAdjacencyMatrix();
         int[] path = new int[this.size + 1];
-        System.out.println(Arrays.deepToString(matrix));
         double cost = this.reduceMatrix(matrix);
-
-        System.out.println(Arrays.deepToString(matrix));
-        System.out.println(String.format("Cost: [%.3f]", cost));
 
         // Make the first city visited.
         this.visited[0] = true;
 
         // Recursively build the search space tree and modify the shortest path.
-        this.step(matrix, cost, 1, path);
+        try {
+            this.step(matrix, cost, 1, path);
+        } catch (InterruptedException ignored) {
+            //
+        }
 
         return this.boundary;
     }
@@ -53,9 +52,12 @@ public class Salesman {
      * @param level The current level
      * @param path The current path
      */
-    private void step(double[][] matrix, double cost, int level, int[] path) {
+    private void step(double[][] matrix, double cost, int level, int[] path) throws InterruptedException {
+        if ((System.nanoTime() - Main.START_TIME) / 1000000 > Main.MAX_EXECUTION_MILIS) {
+            throw new InterruptedException();
+        }
+
         if (level == this.size) {
-            System.out.println(cost);
 
             if (cost < this.boundary) {
                 this.boundary = cost;
