@@ -31,6 +31,7 @@ public class InputFileReader {
         String[] data = line.trim().replaceAll(" +", " ").split(" ");
 
         return new City(
+                Integer.parseInt(data[0]) - 1,
                 Integer.parseInt(data[1]),
                 Integer.parseInt(data[2])
         );

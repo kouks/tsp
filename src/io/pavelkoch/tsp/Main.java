@@ -18,7 +18,7 @@ public class Main {
 	/**
 	 * Max execution time in seconds
 	 */
-	public final static double MAX_EXECUTION_MILIS = 55000.0;
+	public final static double MAX_EXECUTION_MILLIS = 550000.0;
 
 	/**
 	 * The application entry point.
@@ -31,12 +31,6 @@ public class Main {
 		List<City> cities = new InputFileReader().read(Paths.get(INPUT_FILE));
 
 		// Fire the algorithm.
-		double path = new Salesman(cities).travel();
-
-		// Report results.
-		System.out.println(String.format(
-				"Found a path with [%.3f] length in [%.2f]ms.",
-				path, (System.nanoTime() - START_TIME) / 1000000
-		));
+		new Salesman(cities).travel();
 	}
 }

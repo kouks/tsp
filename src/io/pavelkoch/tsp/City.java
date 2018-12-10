@@ -2,6 +2,11 @@ package io.pavelkoch.tsp;
 
 public class City {
     /**
+     * The city id.
+     */
+    private int id;
+
+    /**
      * The city x coordinate.
      */
     private final int x;
@@ -12,28 +17,55 @@ public class City {
     private final int y;
 
     /**
+     * The city x coordinate.
+     */
+    private boolean visited = false;
+
+    /**
      * Class constructor.
      *
-     * @param x The city x coordinate.
-     * @param y The city y coordinate.
+     * @param x The city x coordinate
+     * @param y The city y coordinate
      */
-    public City(int x, int y) {
+    public City(int id, int x, int y) {
+        this.id = id;
         this.x = x;
         this.y = y;
     }
 
     /**
-     * @return The city x coordinate.
+     * @return The city id
+     */
+    public int getId() {
+        return this.id;
+    }
+
+    /**
+     * @return The city x coordinate
      */
     public int getX() {
         return this.x;
     }
 
     /**
-     * @return The city y coordinate.
+     * @return The city y coordinate
      */
     public int getY() {
         return this.y;
+    }
+
+    /**
+     * @return Whether the city was visited
+     */
+    public boolean wasVisited() {
+        return this.visited;
+    }
+
+    /**
+     * @param visited Whether the city was visited
+     */
+    public void setVisited(boolean visited) {
+        this.visited = visited;
     }
 
     /**
@@ -54,6 +86,6 @@ public class City {
      */
     @Override
     public String toString() {
-        return String.format("{%s, %s}", this.x, this.y);
+        return this.id + "";
     }
 }
