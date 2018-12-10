@@ -11,6 +11,9 @@ public class Salesman {
     private static int ITERS = 0;
     private static int BEST_ITERS = 0;
 
+    private Map<Path, Double> costMap = new HashMap<>();
+    private Map<Path, AdjacencyMatrix> matrixMap = new HashMap<>();
+
     /**
      * Class constructor.
      *
@@ -26,17 +29,12 @@ public class Salesman {
      */
     public void travel() {
         AdjacencyMatrix matrix = AdjacencyMatrix.fromCities(this.cities);
-        City[] path = new City[this.size + 1];
+        Path path = Path.at(this.cities.get(0));
         double cost = matrix.reduceAndCost();
-
-        // Make the first city visited and also make it the first and last city in our path.
-        this.cities.get(0).setVisited(true);
-        path[0] = this.cities.get(0);
-        path[this.size] = this.cities.get(0);
 
         try {
             // Recursively build the search space tree and modify the shortest path.
-            this.searchNode(matrix, cost, 1, path);
+            this.searchNode(matrix, path, cost);
         } catch (InterruptedException ignored) {
             //
         }
@@ -47,10 +45,9 @@ public class Salesman {
      *
      * @param matrix The adjacency matrix
      * @param cost The current bound
-     * @param level The current level
      * @param path The current path
      */
-    private void searchNode(AdjacencyMatrix matrix, double cost, int level, City[] path) throws InterruptedException {
+    private void searchNode(AdjacencyMatrix matrix, Path path, double cost) throws InterruptedException {
         // If we reached the time limit, throw an exception to get our of the recursion.
         if ((System.nanoTime() - Main.START_TIME) / 1000000 > Main.MAX_EXECUTION_MILLIS) {
             System.out.println(String.format("Timeout :("));
@@ -59,7 +56,7 @@ public class Salesman {
         }
 
         // If we reached the leaf of the tree, assess the route and terminate this node.
-        if (level == this.size) {
+        if (path.size() == this.size) {
             // Increment iterations counter.
             ITERS++;
 
@@ -72,7 +69,7 @@ public class Salesman {
 
                 System.out.println(String.format("Performed [%dits] at [%.0fit/s]", ITERS, ITERS / ((System.nanoTime() - Main.START_TIME) / 1000000000)));
                 System.out.println(String.format("Performed [%dBits]", BEST_ITERS));
-                System.out.println(Arrays.toString(path));
+                System.out.println(path);
                 System.out.println(String.format(
                         "Found a path [%.3funits] long in [%.2fms].",
                         this.result, (System.nanoTime() - Main.START_TIME) / 1000000
@@ -85,52 +82,41 @@ public class Salesman {
         // Save the current cost so that we can reset later.
         double previousCost = cost;
 
-        // Route key idea.
-        Map<City, Double> costMap = new HashMap<>();
-        Map<City, AdjacencyMatrix> matrixMap = new HashMap<>();
-
         for (City city : this.cities) {
             // If the city was already visited in the current search space, skip it.
-            if (city.wasVisited()) {
+            if (path.has(city)) {
                 continue;
             }
 
             // Copy the current matrix, exclude the path being calculated and reduce it to get the additional cost. This
             // is in result our bounding function that allows us to prune nodes in the search space tree.
             AdjacencyMatrix copy = matrix.copy();
-            copy.excludePath(path[level - 1].getId(), city.getId());
-            cost += matrix.getMatrix()[path[level - 1].getId()][city.getId()] + copy.reduceAndCost();
+            copy.excludePath(path.getCityId(path.size() - 1), city.getId());
+            cost += matrix.getMatrix()[path.getCityId(path.size() - 1)][city.getId()] + copy.reduceAndCost();
+
+            // Add a city to a path.
+            Path continuation = path.add(city);
 
             // Save the results.
-            costMap.put(city, cost);
-            matrixMap.put(city, copy);
+            this.costMap.put(continuation, cost);
+            this.matrixMap.put(continuation, copy);
 
             // Reset the cost variable.
             cost = previousCost;
         }
 
-        List<City> best = this.findBestContinuation(costMap);
+        this.costMap.remove(path);
+        this.matrixMap.remove(path);
 
-        for (City city : best) {
+        List<Path> best = this.findBestContinuation(costMap);
+
+        for (Path continuation : best) {
             // Increment iterations counter.
             ITERS++;
 
             // If the cost is less than the current result, continue searching the node.
-            if (costMap.get(city) < this.result) {
-                path[level] = city;
-                city.setVisited(true);
-
-                this.searchNode(matrixMap.get(city), costMap.get(city), level + 1, path);
-            }
-
-            // After searching the first node, set all the cities that we visited in that node to be
-            // unvisited again.
-            for (City c : this.cities) {
-                c.setVisited(false);
-            }
-
-            for (int j = 0; j < level; j++) {
-                path[j].setVisited(true);
+            if (costMap.containsKey(continuation) && costMap.get(continuation) < this.result) {
+                this.searchNode(matrixMap.get(continuation), continuation, costMap.get(continuation));
             }
         }
     }
@@ -141,8 +127,8 @@ public class Salesman {
      * @param costMap The data to search trough.
      * @return The city list to continue with.
      */
-    private List<City> findBestContinuation(Map<City, Double> costMap) {
-        List<City> best = new ArrayList<>(costMap.keySet());
+    private List<Path> findBestContinuation(Map<Path, Double> costMap) {
+        List<Path> best = new ArrayList<>(costMap.keySet());
         best.sort(Comparator.comparingDouble(costMap::get));
         return best;
     }

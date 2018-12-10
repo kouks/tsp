@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5df63dd6-db3f-4f87-8c56-b30c43ac808c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/io/pavelkoch/tsp/City.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/pavelkoch/tsp/City.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/io/pavelkoch/tsp/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/pavelkoch/tsp/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/io/pavelkoch/tsp/Salesman.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/pavelkoch/tsp/Salesman.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
@@ -13,11 +16,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/io/pavelkoch/tsp/Main.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="260">
-              <caret line="10" column="52" selection-start-line="10" selection-start-column="52" selection-end-line="10" selection-end-column="52" />
+              <caret line="10" column="53" selection-start-line="10" selection-start-column="53" selection-end-line="10" selection-end-column="53" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -25,11 +28,37 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/io/pavelkoch/tsp/Salesman.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="9" column="4" lean-forward="true" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
+            <state relative-caret-position="401">
+              <caret line="133" column="60" selection-start-line="133" selection-start-column="60" selection-end-line="133" selection-end-column="60" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/io/pavelkoch/tsp/Path.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="414">
+              <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#170#171#0" expanded="true" />
+                <element signature="e#206#207#0" expanded="true" />
+                <element signature="e#91#92#0" expanded="true" />
+                <element signature="e#124#125#0" expanded="true" />
+                <element signature="e#529#530#0" expanded="true" />
+                <element signature="e#578#579#0" expanded="true" />
+                <element signature="e#607#608#0" expanded="true" />
+                <element signature="e#669#670#0" expanded="true" />
+                <element signature="e#531#532#0" expanded="true" />
+                <element signature="e#580#581#0" expanded="true" />
+                <element signature="e#502#503#0" expanded="true" />
+                <element signature="e#546#547#0" expanded="true" />
+                <element signature="e#626#627#0" expanded="true" />
+                <element signature="e#665#666#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -49,8 +78,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/io/pavelkoch/tsp/City.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="830">
-              <caret line="90" column="1" lean-forward="true" selection-start-line="90" selection-start-column="1" selection-end-line="90" selection-end-column="1" />
+            <state relative-caret-position="258">
+              <caret line="16" column="24" selection-start-line="16" selection-start-column="24" selection-end-line="16" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -79,6 +108,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>this.res</find>
+      <find>0, 4, 2, 12, 9, 6</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -88,15 +118,16 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/io/pavelkoch/tsp/Coordinates.java" />
-        <option value="$PROJECT_DIR$/src/io/pavelkoch/tsp/Route.java" />
         <option value="$PROJECT_DIR$/src/io/pavelkoch/tsp/Tree.java" />
         <option value="$PROJECT_DIR$/src/io/pavelkoch/tsp/Matrix.java" />
         <option value="$PROJECT_DIR$/src/io/pavelkoch/tsp/InputFileReader.java" />
-        <option value="$PROJECT_DIR$/src/io/pavelkoch/tsp/City.java" />
         <option value="$PROJECT_DIR$/src/io/pavelkoch/tsp/Timer.java" />
         <option value="$PROJECT_DIR$/src/io/pavelkoch/tsp/AdjacencyMatrix.java" />
-        <option value="$PROJECT_DIR$/src/io/pavelkoch/tsp/Salesman.java" />
+        <option value="$PROJECT_DIR$/src/io/pavelkoch/tsp/Route.java" />
+        <option value="$PROJECT_DIR$/src/io/pavelkoch/tsp/City.java" />
+        <option value="$PROJECT_DIR$/src/io/pavelkoch/tsp/Path.java" />
         <option value="$PROJECT_DIR$/src/io/pavelkoch/tsp/Main.java" />
+        <option value="$PROJECT_DIR$/src/io/pavelkoch/tsp/Salesman.java" />
       </list>
     </option>
   </component>
@@ -143,7 +174,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544482477647" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544484947546" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -194,7 +225,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="37905000" />
+    <option name="totallyTimeSpent" value="40381000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
@@ -209,7 +240,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32964823" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3557789" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32361808" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -248,20 +279,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/io/pavelkoch/tsp/Tree.java" />
-    <entry file="file://$PROJECT_DIR$/src/io/pavelkoch/tsp/Route.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="52">
-          <caret line="2" column="14" selection-start-line="2" selection-start-column="14" selection-end-line="2" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/io/pavelkoch/tsp/City.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="830">
-          <caret line="90" column="1" lean-forward="true" selection-start-line="90" selection-start-column="1" selection-end-line="90" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/io/pavelkoch/tsp/Timer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="312">
@@ -293,20 +310,51 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/io/pavelkoch/tsp/Salesman.java">
+    <entry file="file://$PROJECT_DIR$/src/io/pavelkoch/tsp/City.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="9" column="4" lean-forward="true" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
+        <state relative-caret-position="258">
+          <caret line="16" column="24" selection-start-line="16" selection-start-column="24" selection-end-line="16" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/io/pavelkoch/tsp/Path.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#170#171#0" expanded="true" />
+            <element signature="e#206#207#0" expanded="true" />
+            <element signature="e#91#92#0" expanded="true" />
+            <element signature="e#124#125#0" expanded="true" />
+            <element signature="e#529#530#0" expanded="true" />
+            <element signature="e#578#579#0" expanded="true" />
+            <element signature="e#607#608#0" expanded="true" />
+            <element signature="e#669#670#0" expanded="true" />
+            <element signature="e#531#532#0" expanded="true" />
+            <element signature="e#580#581#0" expanded="true" />
+            <element signature="e#502#503#0" expanded="true" />
+            <element signature="e#546#547#0" expanded="true" />
+            <element signature="e#626#627#0" expanded="true" />
+            <element signature="e#665#666#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/io/pavelkoch/tsp/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="260">
-          <caret line="10" column="52" selection-start-line="10" selection-start-column="52" selection-end-line="10" selection-end-column="52" />
+          <caret line="10" column="53" selection-start-line="10" selection-start-column="53" selection-end-line="10" selection-end-column="53" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/io/pavelkoch/tsp/Salesman.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="401">
+          <caret line="133" column="60" selection-start-line="133" selection-start-column="60" selection-end-line="133" selection-end-column="60" />
         </state>
       </provider>
     </entry>

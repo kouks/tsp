@@ -18,7 +18,7 @@ public class Main {
 	/**
 	 * Max execution time in seconds
 	 */
-	public final static double MAX_EXECUTION_MILLIS = 5000.0;
+	public final static double MAX_EXECUTION_MILLIS = 55000.0;
 
 	/**
 	 * The application entry point.

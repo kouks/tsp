@@ -17,11 +17,6 @@ public class City {
     private final int y;
 
     /**
-     * The city x coordinate.
-     */
-    private boolean visited = false;
-
-    /**
      * Class constructor.
      *
      * @param x The city x coordinate
@@ -52,20 +47,6 @@ public class City {
      */
     public int getY() {
         return this.y;
-    }
-
-    /**
-     * @return Whether the city was visited
-     */
-    public boolean wasVisited() {
-        return this.visited;
-    }
-
-    /**
-     * @param visited Whether the city was visited
-     */
-    public void setVisited(boolean visited) {
-        this.visited = visited;
     }
 
     /**
