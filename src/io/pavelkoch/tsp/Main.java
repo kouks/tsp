@@ -8,7 +8,7 @@ public class Main {
 	/**
 	 * The input file name.
 	 */
-	private final static String INPUT_FILE = "test-4.txt";
+	private final static String INPUT_FILE = "test-3.txt";
 
 	/**
 	 * The algorithm start time.
@@ -18,7 +18,7 @@ public class Main {
 	/**
 	 * Max execution time in seconds
 	 */
-	public final static double MAX_EXECUTION_MILLIS = 550000.0;
+	public final static double MAX_EXECUTION_MILLIS = 5000.0;
 
 	/**
 	 * The application entry point.

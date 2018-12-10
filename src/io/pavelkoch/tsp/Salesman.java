@@ -6,8 +6,8 @@ public class Salesman {
 
     private final List<City> cities;
     private final int size;
-    private double result = 76703.689;
-    // private double result = Double.MAX_VALUE;
+    // private double result = 76703.689;
+    private double result = Double.MAX_VALUE;
     private static int ITERS = 0;
     private static int BEST_ITERS = 0;
 
@@ -70,8 +70,8 @@ public class Salesman {
 
                 this.result = cost;
 
-                System.out.println(String.format("Iterations: %d", ITERS));
-                System.out.println(String.format("Best Iterations: %d", BEST_ITERS));
+                System.out.println(String.format("Performed [%dits] at [%.0fit/s]", ITERS, ITERS / ((System.nanoTime() - Main.START_TIME) / 1000000000)));
+                System.out.println(String.format("Performed [%dBits]", BEST_ITERS));
                 System.out.println(Arrays.toString(path));
                 System.out.println(String.format(
                         "Found a path [%.3funits] long in [%.2fms].",
