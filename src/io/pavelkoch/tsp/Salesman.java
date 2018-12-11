@@ -11,9 +11,6 @@ public class Salesman {
     private static int ITERS = 0;
     private static int BEST_ITERS = 0;
 
-    private Map<Path, Double> costMap = new HashMap<>();
-    private Map<Path, AdjacencyMatrix> matrixMap = new HashMap<>();
-
     /**
      * Class constructor.
      *
@@ -67,11 +64,12 @@ public class Salesman {
 
                 this.result = cost;
 
-                System.out.println(String.format("Performed [%dits] at [%.0fit/s]", ITERS, ITERS / ((System.nanoTime() - Main.START_TIME) / 1000000000)));
-                System.out.println(String.format("Performed [%dBits]", BEST_ITERS));
+                // Output logging.
+                System.out.println(String.format("Performed [%d its] at [%.0f it/s]", ITERS, ITERS / ((System.nanoTime() - Main.START_TIME) / 1000000000)));
+                System.out.println(String.format("Performed [%d Bits]", BEST_ITERS));
                 System.out.println(path);
                 System.out.println(String.format(
-                        "Found a path [%.3funits] long in [%.2fms].",
+                        "Found a path [%.3f units] long in [%.2f ms].",
                         this.result, (System.nanoTime() - Main.START_TIME) / 1000000
                 ));
             }
@@ -82,6 +80,10 @@ public class Salesman {
         // Save the current cost so that we can reset later.
         double previousCost = cost;
 
+        // Mapping cost and matrix results for each subsequent node.
+        Map<City, Double> costMap = new HashMap<>();
+        Map<City, AdjacencyMatrix> matrixMap = new HashMap<>();
+
         for (City city : this.cities) {
             // If the city was already visited in the current search space, skip it.
             if (path.has(city)) {
@@ -91,32 +93,24 @@ public class Salesman {
             // Copy the current matrix, exclude the path being calculated and reduce it to get the additional cost. This
             // is in result our bounding function that allows us to prune nodes in the search space tree.
             AdjacencyMatrix copy = matrix.copy();
-            copy.excludePath(path.getCityId(path.size() - 1), city.getId());
-            cost += matrix.getMatrix()[path.getCityId(path.size() - 1)][city.getId()] + copy.reduceAndCost();
-
-            // Add a city to a path.
-            Path continuation = path.add(city);
+            copy.excludePath(path.get(path.size() - 1).getId(), city.getId());
+            cost += matrix.getMatrix()[path.get(path.size() - 1).getId()][city.getId()] + copy.reduceAndCost();
 
             // Save the results.
-            this.costMap.put(continuation, cost);
-            this.matrixMap.put(continuation, copy);
+            costMap.put(city, cost);
+            matrixMap.put(city, copy);
 
             // Reset the cost variable.
             cost = previousCost;
         }
 
-        this.costMap.remove(path);
-        this.matrixMap.remove(path);
-
-        List<Path> best = this.findBestContinuation(costMap);
-
-        for (Path continuation : best) {
+        for (City city : this.findBestContinuation(costMap)) {
             // Increment iterations counter.
             ITERS++;
 
             // If the cost is less than the current result, continue searching the node.
-            if (costMap.containsKey(continuation) && costMap.get(continuation) < this.result) {
-                this.searchNode(matrixMap.get(continuation), continuation, costMap.get(continuation));
+            if (costMap.get(city) < this.result) {
+                this.searchNode(matrixMap.get(city), path.add(city), costMap.get(city));
             }
         }
     }
@@ -127,8 +121,8 @@ public class Salesman {
      * @param costMap The data to search trough.
      * @return The city list to continue with.
      */
-    private List<Path> findBestContinuation(Map<Path, Double> costMap) {
-        List<Path> best = new ArrayList<>(costMap.keySet());
+    private List<City> findBestContinuation(Map<City, Double> costMap) {
+        List<City> best = new ArrayList<>(costMap.keySet());
         best.sort(Comparator.comparingDouble(costMap::get));
         return best;
     }
