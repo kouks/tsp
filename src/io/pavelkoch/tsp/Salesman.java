@@ -6,7 +6,6 @@ public class Salesman {
 
     private final List<City> cities;
     private final int size;
-    // private double result = 76703.689;
     private double result = Double.MAX_VALUE;
     private static int ITERS = 0;
     private static int BEST_ITERS = 0;
@@ -25,125 +24,151 @@ public class Salesman {
      * Entry point for the algorithm.
      */
     public void travel() {
-        AdjacencyMatrix matrix = AdjacencyMatrix.fromCities(this.cities);
-        City[] path = new City[this.size + 1];
-        double cost = matrix.reduceAndCost();
+        double[][] matrix = this.generateMatrix();
+        List<City[]> pairs = this.generatePairs();
 
-        // Make the first city visited and also make it the first and last city in our path.
-        this.cities.get(0).setVisited(true);
-        path[0] = this.cities.get(0);
-        path[this.size] = this.cities.get(0);
+        // Sort city pairs by ascending distance.
+        pairs.sort(Comparator.comparingDouble((City[] c) -> matrix[c[0].getId()][c[1].getId()]));
 
-        try {
-            // Recursively build the search space tree and modify the shortest path.
-            this.searchNode(matrix, cost, 1, path);
-        } catch (InterruptedException ignored) {
-            //
-        }
+        // Build the EMST.
+        List<City[]> tree = this.buildMinimumSpanningTree(pairs);
+
+        // Create the path.
+        List<City> path = this.traverseTree(tree);
+        double length = this.calculatePathLength(path, matrix);
+
+        System.out.println(path);
+        System.out.println(String.format(
+                "Found path [%.3f units] long in [%.3f ms]",
+                length, (System.nanoTime() - Main.START_TIME) / 1000000
+        ));
     }
 
-    /**
-     * Recursive searchNode for building the search space tree.
-     *
-     * @param matrix The adjacency matrix
-     * @param cost The current bound
-     * @param level The current level
-     * @param path The current path
-     */
-    private void searchNode(AdjacencyMatrix matrix, double cost, int level, City[] path) throws InterruptedException {
-        // If we reached the time limit, throw an exception to get our of the recursion.
-        if ((System.nanoTime() - Main.START_TIME) / 1000000 > Main.MAX_EXECUTION_MILLIS) {
-            System.out.println(String.format("Timeout :("));
+    private double calculatePathLength(List<City> path, double[][] matrix) {
+        double length = 0.0;
 
-            throw new InterruptedException();
+        for (int i = 0; i < this.size; i++) {
+            length += matrix[path.get(i).getId()][path.get(i + 1).getId()];
         }
 
-        // If we reached the leaf of the tree, assess the route and terminate this node.
-        if (level == this.size) {
-            // Increment iterations counter.
-            ITERS++;
-
-            // If the cost is less than our current best, set the cost to our current best.
-            if (cost < this.result) {
-                // Increment best iterations counter.
-                BEST_ITERS++;
-
-                this.result = cost;
-
-                System.out.println(String.format("Performed [%dits] at [%.0fit/s]", ITERS, ITERS / ((System.nanoTime() - Main.START_TIME) / 1000000000)));
-                System.out.println(String.format("Performed [%dBits]", BEST_ITERS));
-                System.out.println(Arrays.toString(path));
-                System.out.println(String.format(
-                        "Found a path [%.3funits] long in [%.2fms].",
-                        this.result, (System.nanoTime() - Main.START_TIME) / 1000000
-                ));
-            }
-
-            return;
-        }
-
-        // Save the current cost so that we can reset later.
-        double previousCost = cost;
-
-        // Route key idea.
-        Map<City, Double> costMap = new HashMap<>();
-        Map<City, AdjacencyMatrix> matrixMap = new HashMap<>();
-
-        for (City city : this.cities) {
-            // If the city was already visited in the current search space, skip it.
-            if (city.wasVisited()) {
-                continue;
-            }
-
-            // Copy the current matrix, exclude the path being calculated and reduce it to get the additional cost. This
-            // is in result our bounding function that allows us to prune nodes in the search space tree.
-            AdjacencyMatrix copy = matrix.copy();
-            copy.excludePath(path[level - 1].getId(), city.getId());
-            cost += matrix.getMatrix()[path[level - 1].getId()][city.getId()] + copy.reduceAndCost();
-
-            // Save the results.
-            costMap.put(city, cost);
-            matrixMap.put(city, copy);
-
-            // Reset the cost variable.
-            cost = previousCost;
-        }
-
-        List<City> best = this.findBestContinuation(costMap);
-
-        for (City city : best) {
-            // Increment iterations counter.
-            ITERS++;
-
-            // If the cost is less than the current result, continue searching the node.
-            if (costMap.get(city) < this.result) {
-                path[level] = city;
-                city.setVisited(true);
-
-                this.searchNode(matrixMap.get(city), costMap.get(city), level + 1, path);
-            }
-
-            // After searching the first node, set all the cities that we visited in that node to be
-            // unvisited again.
-            for (City c : this.cities) {
-                c.setVisited(false);
-            }
-
-            for (int j = 0; j < level; j++) {
-                path[j].setVisited(true);
-            }
-        }
+        return length;
     }
 
-    /**
-     * Find the best continuation based on the cost.
-     *
-     * @param costMap The data to search trough.
-     * @return The city list to continue with.
-     */
-    private List<City> findBestContinuation(Map<City, Double> costMap) {
-        List<City> best = new ArrayList<>(costMap.keySet());
-        best.sort(Comparator.comparingDouble(costMap::get));
-        return best;
+    private List<City> traverseTree(List<City[]> tree) {
+        List<City> path = new ArrayList<>();
+        List<City[]> visited = new ArrayList<>();
+
+        // Add the first city to the path.
+        path.add(this.cities.get(0));
+
+        while (path.size() < this.size) {
+
+            outer:
+            for (City[] pair : tree) {
+                if (visited.contains(pair)) {
+                    continue;
+                }
+
+                for (City city : path) {
+                    if (city != pair[0] && city != pair[1]) {
+                        continue;
+                    }
+
+                    path.add(pair[0] == city ? pair[1] : pair[0]);
+                    visited.add(pair);
+
+                    break outer;
+                }
+            }
+        }
+
+        path.add(this.cities.get(0));
+
+        return path;
+    }
+
+    // TODO this is shit but I wanna get it working first.
+    private List<City[]> buildMinimumSpanningTree(List<City[]> pairs) {
+        List<City[]> tree = new ArrayList<>();
+        Map<City[], Boolean> used = new HashMap<>();
+
+        // Make all pairs as not used.
+        for (City[] pair : pairs) {
+            used.put(pair, false);
+        }
+
+        // Put the first pair in the tree.
+        tree.add(pairs.get(0));
+        used.put(pairs.get(0), true);
+
+        // Build the tree until there are N - 1 nodes.
+        outer:
+        while (true) {
+            for (City[] pair : pairs) {
+                // Skip all used pairs.
+                if (used.get(pair)) {
+                    continue;
+                }
+
+                // If and only if a city of the pair is in the tree once, add the pair to the tree.
+                if (this.hasOneCityInTree(pair, tree)) {
+                    tree.add(pair);
+                }
+
+                if (tree.size() == this.size - 1) {
+                    break outer;
+                }
+            }
+        }
+
+        return tree;
+    }
+
+    private boolean hasOneCityInTree(City[] pair, List<City[]> tree) {
+        int occurrences = 0;
+
+        for (City[] node : tree) {
+            // If we found either city of the candidate pair in the tree, add it to the tree.
+            if (
+                    node[0] == pair[0]
+                    || node[1] == pair[1]
+                    || node[0] == pair[1]
+                    || node[1] == pair[0]
+            ) {
+                occurrences++;
+            }
+        }
+
+        return occurrences == 1;
+    }
+
+    // TODO this can be reduced.
+    private double[][] generateMatrix() {
+        double[][] matrix = new double[this.size][this.size];
+
+        for (City origin : this.cities) {
+            // Fill the gaps with -1s that we can ignore.
+            matrix[origin.getId()][origin.getId()] = -1.0;
+
+            for (City destination : this.cities) {
+                // Distances are symmetrical.
+                matrix[origin.getId()][destination.getId()] = matrix[destination.getId()][origin.getId()] = origin.distanceTo(destination);
+            }
+        }
+
+        return matrix;
+    }
+
+    private List<City[]> generatePairs() {
+        List<City[]> pairs = new ArrayList<>();
+
+        for (int i = 0; i < this.size; i++) {
+            for (int j = i + 1; j < this.size; j++) {
+                // Only add each pair once, no matter the direction.
+                pairs.add(new City[] { this.cities.get(i), this.cities.get(j) });
+            }
+        }
+
+        return pairs;
     }
 }
