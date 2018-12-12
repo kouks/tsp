@@ -35,7 +35,7 @@ public class Salesman {
 
         // Create the path.
         List<City> path = this.traverseTree(tree);
-        double length = this.calculatePathLength(path, matrix);
+        double length = this.calculatePathLength(path);
 
         System.out.println(path);
         System.out.println(String.format(
@@ -44,11 +44,11 @@ public class Salesman {
         ));
     }
 
-    private double calculatePathLength(List<City> path, double[][] matrix) {
+    private double calculatePathLength(List<City> path) {
         double length = 0.0;
 
         for (int i = 0; i < this.size; i++) {
-            length += matrix[path.get(i).getId()][path.get(i + 1).getId()];
+            length += path.get(i).distanceTo(path.get(i + 1));
         }
 
         return length;
