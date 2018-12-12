@@ -127,14 +127,16 @@ public class Salesman {
     private boolean hasOneCityInTree(City[] pair, List<City[]> tree) {
         int occurrences = 0;
 
+        // Create a set of all used cities in the tree.
+        Set<City> used = new HashSet<>();
+
         for (City[] node : tree) {
-            // If we found either city of the candidate pair in the tree, add it to the tree.
-            if (
-                    node[0] == pair[0]
-                    || node[1] == pair[1]
-                    || node[0] == pair[1]
-                    || node[1] == pair[0]
-            ) {
+            used.add(node[0]);
+            used.add(node[1]);
+        }
+
+        for (City vertex : used) {
+            if (vertex == pair[0] || vertex == pair[1]) {
                 occurrences++;
             }
         }
